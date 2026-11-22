@@ -4,8 +4,8 @@
 export type Milestone = { when: string; what: string; note: string };
 
 export const trajectory: Milestone[] = [
-  { when: '2019', what: 'B.Sc. Computer Science', note: 'First code, coming from a PCMB science background.' },
-  { when: '2023', what: 'MCA begins', note: 'After a year preparing for the entrance exam.' },
+  { when: '2019', what: 'B.Sc. Computer Science', note: 'Where I wrote my first lines of code.' },
+  { when: '2023', what: 'MCA begins', note: 'Techno Main Salt Lake, Kolkata.' },
   { when: '2024', what: 'VisionaryX v1', note: 'A Streamlit RAG prototype with my MCA team. My first retrieval system.' },
   { when: '2025', what: 'MindMate and ResuHire AI', note: 'Led a five-person mobile app team; built my first résumé-matching backend. MCA complete.' },
   { when: 'Mar 2026', what: 'VisionaryX 2.0', note: 'Rebuilt the prototype as FastAPI + React and deployed it.' },
