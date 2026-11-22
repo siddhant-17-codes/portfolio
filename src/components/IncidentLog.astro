@@ -1,0 +1,162 @@
+---
+import SectionHead from './SectionHead.astro';
+import { incidents } from '../data/incidents';
+
+const fields = [
+  ['impact', 'Impact'],
+  ['happened', 'What happened'],
+  ['cause', 'Root cause'],
+  ['fix', 'Fix'],
+  ['after', 'What changed after'],
+] as const;
+---
+
+<section class="wrap log" id="incidents" aria-labelledby="incidents-title">
+  <SectionHead
+    id="incidents"
+    kicker="Incident log"
+    title="What broke, and what I did about it."
+    intro="Written the way a postmortem is. The IDs are the ones these problems carry in the projects’ own records. One is still open, on purpose."
+  />
+
+  <ol class="list">
+    {incidents.map((inc, i) => (
+      <li>
+        <details open={i === 0}>
+          <summary>
+            <span class="when mono">{inc.when}</span>
+            <span class="title">{inc.title}</span>
+            <span class="where mono">
+              {inc.project}{inc.ref && <> · {inc.ref}</>}
+            </span>
+            <span class:list={['state', 'mono', inc.state]}>{inc.state}</span>
+            <span class="toggle mono" aria-hidden="true"></span>
+          </summary>
+          <dl class="body">
+            {fields.map(([key, label]) => (
+              <div class:list={['field', key]}>
+                <dt class="mono">{label}</dt>
+                <dd>{inc[key]}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .log {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  li {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto 4.2rem 1rem;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1.15rem 0.2rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary:hover .title {
+    color: var(--sodium);
+  }
+  .when,
+  .where {
+    color: var(--muted);
+  }
+  .title {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+  .state {
+    justify-self: end;
+    font-size: 0.72rem;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+  .toggle::before {
+    content: '+';
+    color: var(--muted);
+  }
+  details[open] .toggle::before {
+    content: '−';
+  }
+  .state.fixed {
+    color: var(--ok);
+  }
+  .state.open {
+    color: var(--sodium);
+  }
+  .body {
+    margin: 0 0 1.6rem 7.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem 2.4rem;
+    max-width: 62rem;
+  }
+  .field.impact,
+  .field.after {
+    grid-column: 1 / -1;
+  }
+  dt {
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+    font-size: 0.74rem;
+  }
+  dd {
+    margin: 0;
+    color: var(--paper-dim);
+  }
+  .impact dd {
+    color: var(--paper);
+  }
+  .after dd {
+    color: var(--paper);
+    border-left: 2px solid var(--sodium);
+    padding-left: 0.9rem;
+  }
+  @media (max-width: 760px) {
+    summary {
+      grid-template-columns: minmax(0, 1fr) auto 1rem;
+      grid-template-areas:
+        'when state toggle'
+        'title title title'
+        'where where where';
+      gap: 0.35rem 1rem;
+    }
+    .when {
+      grid-area: when;
+    }
+    .title {
+      grid-area: title;
+    }
+    .where {
+      grid-area: where;
+    }
+    .state {
+      grid-area: state;
+    }
+    .toggle {
+      grid-area: toggle;
+    }
+    .body {
+      margin-left: 0;
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

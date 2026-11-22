@@ -1,0 +1,105 @@
+---
+/**
+ * Shows a poster until the visitor asks for the video. The video file is
+ * not requested at all before that click, which keeps first load small.
+ */
+interface Props {
+  src: string;
+  poster: string;
+  seconds: number;
+  caption: string;
+  title: string;
+}
+const { src, poster, seconds, caption, title } = Astro.props;
+---
+
+<figure class="demo">
+  <div class="frame" data-video-frame data-src={src}>
+    <img src={poster} alt={`Still from the ${title} demo`} width="1280" height="720" loading="lazy" fetchpriority="low" decoding="async" />
+    <button type="button" class="play mono" data-play>
+      <span class="tri" aria-hidden="true"></span>
+      <span>Play<span class="long"> the {title}</span> demo · {seconds} s<span class="long">, no sound</span></span>
+    </button>
+  </div>
+  <figcaption class="mono">{caption}</figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video-frame]').forEach((frame) => {
+    const button = frame.querySelector<HTMLButtonElement>('[data-play]');
+    button?.addEventListener('click', () => {
+      const poster = frame.querySelector('img');
+      const video = document.createElement('video');
+      video.src = frame.dataset['src'] ?? '';
+      video.poster = poster?.getAttribute('src') ?? '';
+      video.controls = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.width = 1600;
+      video.height = 900;
+      frame.replaceChildren(video);
+      // Starts only because the visitor pressed Play. Nothing here runs on scroll.
+      void video.play().catch(() => {
+        /* Autoplay refused: the controls are visible, so the visitor can press play. */
+      });
+      video.focus();
+    });
+  });
+</script>
+
+<style>
+  .demo {
+    margin: 0;
+  }
+  .frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+  .frame :global(img),
+  .frame :global(video) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .play {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ink) 86%, transparent);
+    color: var(--paper);
+    cursor: pointer;
+    font-size: 0.78rem;
+  }
+  .play:hover {
+    border-color: var(--sodium);
+    color: var(--sodium);
+  }
+  .tri {
+    width: 0;
+    height: 0;
+    border-left: 8px solid currentColor;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  @media (max-width: 560px) {
+    .long {
+      display: none;
+    }
+  }
+  figcaption {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import SectionHead from './SectionHead.astro';
+import ProjectFeature from './ProjectFeature.astro';
+import PipelineDiagram from './PipelineDiagram.astro';
+import { reflect, visionaryx, mindmate } from '../data/projects';
+---
+
+<section class="wrap work" id="work" aria-labelledby="work-title">
+  <SectionHead
+    id="work"
+    kicker="Work"
+    title="Things I built that people can open today."
+    intro="Each one is written up by the decisions that shaped it, because the stack is the least interesting part."
+  />
+  <ProjectFeature project={reflect} size="lead">
+    <PipelineDiagram />
+  </ProjectFeature>
+  <ProjectFeature project={visionaryx} />
+  <ProjectFeature project={mindmate} size="compact" />
+</section>
+
+<style>
+  .work {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+</style>

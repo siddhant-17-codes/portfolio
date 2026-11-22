@@ -1,0 +1,173 @@
+---
+import SectionHead from './SectionHead.astro';
+import { areas, ragSteps, ragNext } from '../data/expertise';
+
+const deepDive = 'https://github.com/siddhant-17-codes/VisionaryX-2.0/blob/main/docs/RAG_DEEP_DIVE.md';
+---
+
+<section class="wrap expertise" id="expertise" aria-labelledby="expertise-title">
+  <SectionHead
+    id="expertise"
+    kicker="Expertise"
+    title="Backend first, with AI and ML built in."
+    intro="Today a backend developer has to know what a model can be trusted with and what it cannot. These are the areas I have shipped real work in, each with the project that proves it."
+  />
+
+  <div class="rag">
+    <div class="rag-text">
+      <h3>Retrieval-augmented generation, end to end</h3>
+      <p>
+        VisionaryX answers questions about your documents and cites the page. I built each stage
+        and can explain every number in it, down to why a distance of 0.47 means a cosine
+        similarity of about 0.76.
+      </p>
+      <p class="next-label mono">What I would add for production</p>
+      <ul class="next">
+        {ragNext.map((n) => <li>{n}</li>)}
+      </ul>
+      <p class="mono">
+        <a href={deepDive} rel="noopener">Read the RAG deep dive ↗</a>
+      </p>
+    </div>
+    <ol class="steps">
+      {ragSteps.map((s) => (
+        <li>
+          <span class="step mono">{s.step}</span>
+          <span class="detail">{s.detail}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <ul class="areas">
+    {areas.map((a) => (
+      <li>
+        <h3>{a.title}</h3>
+        <p class="body">{a.body}</p>
+        <p class="proof mono">Proof: {a.proof}</p>
+        <p class="tools mono">{a.tools.join(' · ')}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .expertise {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .rag {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+    gap: clamp(1.8rem, 4vw, 3.5rem);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--ink-2);
+  }
+  .rag h3 {
+    font-size: var(--step-2);
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+  .rag-text {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    color: var(--paper-dim);
+  }
+  .next-label {
+    color: var(--sodium);
+    font-size: 0.74rem;
+    margin-top: 0.4rem;
+  }
+  .next {
+    margin: -0.4rem 0 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+  .next li::marker {
+    color: var(--muted);
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    display: grid;
+  }
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 6.2rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  }
+  .steps li:first-child {
+    padding-top: 0;
+  }
+  .steps li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .step {
+    color: var(--paper);
+  }
+  .step::before {
+    content: counter(step) ' ';
+    color: var(--sodium);
+  }
+  .detail {
+    color: var(--paper-dim);
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .areas {
+    list-style: none;
+    margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.8rem, 3.5vw, 2.6rem) clamp(1.5rem, 4vw, 3.5rem);
+  }
+  .areas li {
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+  }
+  .areas h3 {
+    font-size: var(--step-1);
+    font-weight: 450;
+  }
+  .body {
+    color: var(--paper-dim);
+  }
+  .proof {
+    color: var(--sodium);
+    font-size: 0.74rem;
+  }
+  .tools {
+    color: var(--muted);
+    font-size: 0.74rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 860px) {
+    .rag,
+    .areas {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 420px) {
+    .steps li {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
+    }
+  }
+</style>

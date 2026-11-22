@@ -1,0 +1,106 @@
+---
+import { person } from '../data/site';
+---
+
+<section class="wrap contact" id="contact" aria-labelledby="contact-title">
+  <p class="kicker mono">Contact</p>
+  <h2 id="contact-title">Hiring for a backend or Python role,<br />or need an API built?</h2>
+  <p class="sub">
+    Write to me. I’m open to full-time roles anywhere in India or remote, and to freelance backend
+    work. My CV is available on request.
+  </p>
+
+  <div class="mail" data-mail data-user={person.email.user} data-domain={person.email.domain}>
+    <a class="address" data-mail-link href="#contact">
+      <span data-mail-text>{person.email.user} [at] {person.email.domain}</span>
+    </a>
+    <button type="button" class="copy mono" data-copy hidden>Copy address</button>
+  </div>
+
+  <p class="elsewhere mono">
+    <a href={person.links.linkedin} rel="noopener me">LinkedIn ↗</a>
+    <a href={person.links.github} rel="noopener me">GitHub ↗</a>
+  </p>
+</section>
+
+<script>
+  // The address is put together here so it never sits whole in the HTML.
+  const box = document.querySelector<HTMLElement>('[data-mail]');
+  if (box) {
+    const address = `${box.dataset['user']}@${box.dataset['domain']}`;
+    const link = box.querySelector<HTMLAnchorElement>('[data-mail-link]');
+    const text = box.querySelector<HTMLElement>('[data-mail-text]');
+    const copy = box.querySelector<HTMLButtonElement>('[data-copy]');
+    if (link && text) {
+      link.href = `mailto:${address}`;
+      text.textContent = address;
+    }
+    if (copy && navigator.clipboard) {
+      copy.hidden = false;
+      copy.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(address);
+          copy.textContent = 'Copied';
+        } catch {
+          copy.textContent = 'Select and copy it above';
+        }
+        setTimeout(() => (copy.textContent = 'Copy address'), 2400);
+      });
+    }
+  }
+</script>
+
+<style>
+  .contact {
+    padding-block: clamp(4rem, 10vw, 8rem);
+  }
+  .kicker {
+    color: var(--sodium);
+    margin-bottom: 1.2rem;
+  }
+  h2 {
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+  }
+  .sub {
+    margin-top: 1.4rem;
+    max-width: 52ch;
+    color: var(--paper-dim);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .mail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.4rem;
+    margin-top: 2.4rem;
+  }
+  .address {
+    font-size: var(--step-2);
+    color: var(--sodium);
+    text-decoration-thickness: 1px;
+    word-break: break-all;
+  }
+  .address:hover {
+    color: var(--paper);
+  }
+  .copy {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--paper-dim);
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+  }
+  .copy:hover {
+    border-color: var(--sodium);
+    color: var(--sodium);
+  }
+  .elsewhere {
+    display: flex;
+    gap: 1.6rem;
+    margin-top: 2rem;
+  }
+</style>

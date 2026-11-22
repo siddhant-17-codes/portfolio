@@ -1,0 +1,97 @@
+---
+import TraceProbe from './TraceProbe.astro';
+import { person } from '../data/site';
+---
+
+<section class="hero wrap" id="top" aria-labelledby="hero-title">
+  <div class="text">
+    <p class="eyebrow mono">{person.role} · {person.place}</p>
+    <h1 id="hero-title">I start with the system,<br /><em>not the screen.</em></h1>
+    <p class="lede">
+      I’m Siddhant. Give me an idea and I work out where its data lives, what one use costs, and
+      what happens when it fails. Then I build it until real people can use it. Right now that’s
+      <a href="https://reflectcareer.com/">Reflect</a>, a career tool I designed, built and run on
+      my own.
+    </p>
+    <p class="actions mono">
+      <a href="#work">See the work ↓</a>
+      <a href="#contact">Write to me</a>
+    </p>
+  </div>
+
+  <div class="probe">
+    <TraceProbe />
+    <p class="caption mono">
+      Your browser is checking my live projects right now. These are real requests, not an animation.
+    </p>
+  </div>
+</section>
+
+<style>
+  /*
+   * On wide screens the hero fills exactly one screen under the header and
+   * centres its content, so nothing important sits below the fold. Type and
+   * spacing scale with the screen's height as well as its width, which keeps
+   * short laptop screens (e.g. 1366 x 625 inside a browser) from overflowing.
+   */
+  .hero {
+    --h1: clamp(2.2rem, min(1.6rem + 2.8vw, 7.4vh), 4.4rem);
+    --lede: clamp(1.05rem, min(0.98rem + 0.5vw, 2.75vh), 1.55rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    padding-block: clamp(2.5rem, 7vh, 6rem);
+  }
+  /* Landscape only: on a tall portrait tablet, filling the screen would
+     float the content in a sea of empty space. */
+  @media (min-width: 921px) and (orientation: landscape) {
+    .hero {
+      min-height: calc(100svh - 3.5rem);
+      padding-block: clamp(1.25rem, 4vh, 3.5rem);
+    }
+  }
+  .eyebrow {
+    color: var(--muted);
+    margin-bottom: clamp(0.8rem, 2.2vh, 1.4rem);
+  }
+  h1 {
+    font-size: var(--h1);
+    letter-spacing: -0.015em;
+    font-weight: 380;
+  }
+  h1 em {
+    color: var(--sodium);
+    font-style: italic;
+    font-weight: 340;
+  }
+  .lede {
+    margin-top: clamp(0.9rem, 2.6vh, 1.6rem);
+    max-width: 46ch;
+    color: var(--paper-dim);
+    font-size: var(--lede);
+    line-height: 1.5;
+  }
+  .lede a {
+    color: var(--paper);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    margin-top: clamp(1.1rem, 3.2vh, 2rem);
+  }
+  .actions a {
+    color: var(--paper);
+  }
+  .caption {
+    margin-top: 0.8rem;
+    color: var(--muted);
+    font-size: 0.76rem;
+  }
+  @media (max-width: 920px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

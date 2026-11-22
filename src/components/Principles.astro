@@ -1,0 +1,45 @@
+---
+import SectionHead from './SectionHead.astro';
+import { principles } from '../data/principles';
+---
+
+<section class="wrap principles" id="principles" aria-labelledby="principles-title">
+  <SectionHead id="principles" kicker="How I decide" title="Rules I picked up by breaking things." />
+  <ul class="grid">
+    {principles.map((p) => (
+      <li>
+        <h3>{p.title}</h3>
+        <p>{p.body}</p>
+        <p class="src mono">from {p.source}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .principles {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+  }
+  h3 {
+    font-size: var(--step-1);
+    font-style: italic;
+    font-weight: 420;
+    margin-bottom: 0.7rem;
+  }
+  p {
+    color: var(--paper-dim);
+  }
+  .src {
+    margin-top: 0.8rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+</style>

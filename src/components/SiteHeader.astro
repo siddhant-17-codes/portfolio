@@ -1,0 +1,112 @@
+---
+import { person } from '../data/site';
+
+const nav = [
+  { href: '#work', label: 'Work' },
+  { href: '#expertise', label: 'Expertise' },
+  { href: '#incidents', label: 'Incidents' },
+  { href: '#principles', label: 'How I decide' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<header class="bar">
+  <div class="wrap row">
+    <a class="id" href="#top" aria-label={`${person.name}, back to top`}>
+      <span class="name">{person.name}</span>
+      <span class="clock mono" aria-hidden="true"><span data-clock>Kolkata</span></span>
+    </a>
+    <nav aria-label="Sections">
+      <ul>
+        {nav.map((item) => (
+          <li><a class="mono" href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Local time in Kolkata, so a visitor abroad knows whether I'm awake.
+  const el = document.querySelector<HTMLElement>('[data-clock]');
+  if (el) {
+    const fmt = new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+    const tick = () => {
+      el.textContent = `Kolkata ${fmt.format(new Date())} IST`;
+    };
+    tick();
+    setInterval(tick, 30_000);
+  }
+</script>
+
+<style>
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.5rem;
+  }
+  .id {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .name {
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .clock {
+    color: var(--muted);
+  }
+  ul {
+    display: flex;
+    gap: clamp(0.9rem, 2.2vw, 1.8rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    color: var(--paper-dim);
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: var(--sodium);
+  }
+  /* Narrower screens keep the most useful links: Work, Expertise, Contact. */
+  @media (max-width: 900px) {
+    .clock {
+      display: none;
+    }
+  }
+  @media (max-width: 760px) {
+    li:nth-child(4) {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    li:nth-child(3) {
+      display: none;
+    }
+  }
+  @media (max-width: 380px) {
+    li:nth-child(2) {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,292 @@
+---
+/**
+ * One project. `size="lead"` is the main project; `size="compact"` is a
+ * one-row entry. Anything passed in the default slot (e.g. a diagram)
+ * appears under the decisions.
+ */
+import type { Project } from '../data/projects';
+import VideoDemo from './VideoDemo.astro';
+
+interface Props {
+  project: Project;
+  size?: 'lead' | 'standard' | 'compact';
+}
+const { project: p, size = 'standard' } = Astro.props;
+const headingId = `${p.id}-name`;
+---
+
+<article class:list={['project', size]} aria-labelledby={headingId}>
+  <header class="top">
+    <div class="titles">
+      <h3 id={headingId}>{p.name}</h3>
+      <p class="one">{p.oneLiner}</p>
+    </div>
+    <dl class="meta mono">
+      <div>
+        <dt>Status</dt>
+        <dd class:list={['status', { live: p.status.live }]}>{p.status.label}</dd>
+      </div>
+      <div><dt>Role</dt><dd>{p.role}</dd></div>
+      <div><dt>When</dt><dd>{p.period}</dd></div>
+    </dl>
+  </header>
+
+  {size === 'lead' ? (
+    <div class="pair">
+      {p.video && (
+        <VideoDemo src={p.video.src} poster={p.video.poster} seconds={p.video.seconds} caption={p.video.caption} title={p.name} />
+      )}
+      <slot />
+    </div>
+  ) : (
+    p.video && size !== 'compact' && (
+      <VideoDemo src={p.video.src} poster={p.video.poster} seconds={p.video.seconds} caption={p.video.caption} title={p.name} />
+    )
+  )}
+
+  {p.decisions && (
+    <div class="decisions">
+      {p.decisions.map((d) => (
+        <section class="decision">
+          <h4>{d.title}</h4>
+          <p>{d.body}</p>
+        </section>
+      ))}
+    </div>
+  )}
+
+  {size !== 'lead' && <slot />}
+
+  {p.facts && (
+    <dl class="facts">
+      {p.facts.map((f) => (
+        <div>
+          <dt class="mono">{f.label}</dt>
+          <dd>{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+
+  {p.caveat && <p class="caveat mono"><span>Known limits</span>{p.caveat}</p>}
+
+  <footer class="foot">
+    <ul class="stack mono" aria-label="Built with">
+      {p.stack.map((s) => <li>{s}</li>)}
+    </ul>
+    <p class="links mono">
+      {p.links.map((l) => (
+        <a href={l.href} rel="noopener">{l.label} ↗</a>
+      ))}
+    </p>
+  </footer>
+</article>
+
+<style>
+  .project {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.2rem);
+  }
+  .project + :global(.project) {
+    margin-top: clamp(4rem, 9vw, 7rem);
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: end;
+  }
+  h3 {
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+  }
+  .standard h3 {
+    font-size: var(--step-2);
+  }
+  .one {
+    margin-top: 0.9rem;
+    max-width: 44ch;
+    color: var(--paper-dim);
+    font-size: var(--step-1);
+    line-height: 1.45;
+  }
+  .meta {
+    margin: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .meta div {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.6rem;
+  }
+  .meta dt {
+    color: var(--muted);
+  }
+  .meta dd {
+    margin: 0;
+    color: var(--paper-dim);
+  }
+  .status::before {
+    content: '';
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--muted);
+    margin-right: 0.45rem;
+    vertical-align: 0.08em;
+  }
+  .status.live {
+    color: var(--ok);
+  }
+  .status.live::before {
+    background: var(--ok);
+  }
+
+  /* Lead project: video beside the diagram, so the video stays at a size
+     its recording resolution can fill sharply. */
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+    align-items: start;
+  }
+  @media (max-width: 920px) {
+    .pair {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .decisions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.4rem, 3vw, 2.4rem) clamp(1.5rem, 4vw, 3.5rem);
+  }
+  .standard .decisions,
+  .compact .decisions {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: var(--measure);
+  }
+  h4 {
+    font-size: var(--step-1);
+    font-weight: 450;
+    line-height: 1.25;
+    margin: 0 0 0.5rem;
+  }
+  .decision p {
+    color: var(--paper-dim);
+  }
+
+  .facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .facts div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dd {
+    margin: 0;
+    font-size: var(--step-2);
+    line-height: 1;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .facts dt {
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+
+  .caveat {
+    max-width: var(--measure);
+    color: var(--paper-dim);
+    border-left: 2px solid var(--sodium);
+    padding-left: 0.9rem;
+    line-height: 1.6;
+  }
+  .caveat span {
+    display: block;
+    color: var(--sodium);
+    margin-bottom: 0.2rem;
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem 2rem;
+  }
+  .stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+
+  @media (min-width: 821px) {
+    .standard {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      column-gap: clamp(2rem, 4vw, 3.5rem);
+      align-items: start;
+    }
+    .standard > .top,
+    .standard > .foot {
+      grid-column: 1 / -1;
+    }
+    .standard > :global(.demo) {
+      grid-column: 1;
+      grid-row: 2 / span 2;
+    }
+    .standard > .decisions,
+    .standard > .caveat {
+      grid-column: 2;
+    }
+  }
+
+  .compact h4 {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .compact {
+    padding-top: 1.6rem;
+    border-top: 1px dashed var(--line);
+  }
+  .compact h3 {
+    font-size: var(--step-1);
+  }
+  .compact .one {
+    font-size: var(--step-0);
+  }
+
+  @media (max-width: 820px) {
+    .top {
+      grid-template-columns: 1fr;
+      gap: 1.3rem;
+    }
+    .decisions {
+      grid-template-columns: 1fr;
+    }
+    .facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

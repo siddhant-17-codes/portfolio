@@ -1,0 +1,100 @@
+---
+/**
+ * Reflect's request path, at the level that is safe to publish:
+ * which stages exist and where they run. No weights or thresholds.
+ */
+const inRequest = ['Upload', 'Parse résumé', 'Parse job description'];
+const background = [
+  { name: 'Represent candidate', kind: 'code' },
+  { name: 'Match on 4 dimensions', kind: 'code' },
+  { name: 'Verdict + score', kind: 'code' },
+  { name: 'Write report', kind: 'model' },
+];
+---
+
+<figure class="pipe" aria-labelledby="pipe-cap">
+  <div class="lane">
+    <p class="lane-name mono">Inside the request</p>
+    <ol>
+      {inRequest.map((s) => <li class="mono">{s}</li>)}
+    </ol>
+  </div>
+  <div class="lane">
+    <p class="lane-name mono">Background task · each stage saved to PostgreSQL</p>
+    <ol>
+      {background.map((s) => (
+        <li class:list={['mono', s.kind]}>
+          {s.name}
+          {s.kind === 'model' && <span class="tag">model, or template</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+  <div class="lane reader">
+    <p class="lane-name mono">Progress stream</p>
+    <p class="mono read">reads the saved stages every 0.3 s · runs nothing · falls back to polling</p>
+  </div>
+  <figcaption id="pipe-cap" class="mono">
+    How one Reflect analysis moves. Amber is the only step a language model may touch.
+  </figcaption>
+</figure>
+
+<style>
+  .pipe {
+    margin: 0;
+    padding: 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--ink-2);
+    display: grid;
+    gap: 1.1rem;
+  }
+  .lane-name {
+    color: var(--muted);
+    font-size: 0.72rem;
+    margin-bottom: 0.5rem;
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  li {
+    position: relative;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-size: 0.78rem;
+    color: var(--paper);
+    background: var(--ink);
+  }
+  li:not(:last-child)::after {
+    content: '→';
+    margin-left: 0.55rem;
+    color: var(--muted);
+  }
+  li.model {
+    border-color: var(--sodium);
+    color: var(--sodium);
+  }
+  .tag {
+    display: block;
+    font-size: 0.66rem;
+    color: var(--paper-dim);
+  }
+  .reader .read {
+    font-size: 0.78rem;
+    color: var(--paper-dim);
+    border-left: 2px solid var(--line);
+    padding-left: 0.7rem;
+  }
+  figcaption {
+    color: var(--muted);
+    font-size: 0.72rem;
+    border-top: 1px dashed var(--line);
+    padding-top: 0.8rem;
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import { person } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap row mono">
+    <p class="weight" data-weight>
+      Hand-built with Astro. No framework runtime shipped. Static files, served from Cloudflare’s edge.
+    </p>
+    <p class="copy">© {year} {person.name}</p>
+  </div>
+</footer>
+
+<script>
+  // Report what this visit actually cost, measured by the browser.
+  const out = document.querySelector<HTMLElement>('[data-weight]');
+  const report = () => {
+    if (!out) return;
+    const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const sameOrigin = (performance.getEntriesByType('resource') as PerformanceResourceTiming[]).filter(
+      (r) => r.name.startsWith(location.origin),
+    );
+    const bytes = (nav?.transferSize ?? 0) + sameOrigin.reduce((sum, r) => sum + r.transferSize, 0);
+    const ready = nav ? Math.round(nav.domContentLoadedEventEnd) : 0;
+    const files = sameOrigin.length + 1;
+    // transferSize is 0 when served from cache or when the browser hides it.
+    const kb = bytes > 0 ? `${(bytes / 1024).toFixed(0)} KB over the wire` : 'served from your cache';
+    out.textContent = `This visit: ${kb}, ${files} files, ready in ${ready} ms. Hand-built with Astro, no framework runtime, served from Cloudflare’s edge.`;
+  };
+  if (document.readyState === 'complete') setTimeout(report, 0);
+  else addEventListener('load', () => setTimeout(report, 0), { once: true });
+</script>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--line);
+    padding-block: 1.6rem 2.2rem;
+    color: var(--muted);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.8rem 2rem;
+    font-size: 0.74rem;
+  }
+  .weight {
+    max-width: 70ch;
+  }
+</style>

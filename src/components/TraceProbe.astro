@@ -1,0 +1,189 @@
+---
+/**
+ * A live request trace, drawn by the visitor's own browser.
+ * Row 1 is this page (Navigation Timing). The other rows are real health
+ * checks against my deployed projects, configured in src/data/site.ts.
+ * Nothing here is simulated: if a server is down, the trace says so.
+ */
+import { probes } from '../data/site';
+---
+
+<figure class="trace" data-trace data-probes={JSON.stringify(probes)}>
+  <figcaption class="mono head">
+    <span>trace · your visit</span>
+    <span class="started" data-started>live</span>
+  </figcaption>
+
+  <ol class="rows">
+    <li class="row" data-row="self" data-state="pending">
+      <span class="method mono">GET</span>
+      <span class="target mono">this page<small>static, from the edge</small></span>
+      <span class="track" aria-hidden="true"><span class="fill"></span></span>
+      <span class="ms mono" data-ms>…</span>
+      <span class="state mono" data-label>loading</span>
+    </li>
+    {probes.map((p) => (
+      <li class="row" data-row={p.id} data-state="pending">
+        <span class="method mono">GET</span>
+        <span class="target mono">{p.label}<small>{p.host}</small></span>
+        <span class="track" aria-hidden="true"><span class="fill"></span></span>
+        <span class="ms mono" data-ms>…</span>
+        <span class="state mono" data-label>waiting</span>
+      </li>
+    ))}
+  </ol>
+
+  <p class="note mono" data-note hidden></p>
+  <p class="visually-hidden" aria-live="polite" data-announce></p>
+  <noscript><p class="note mono">Turn on JavaScript to watch these checks run live.</p></noscript>
+</figure>
+
+<script>
+  import { runTrace } from '../scripts/trace';
+  const root = document.querySelector<HTMLElement>('[data-trace]');
+  if (root) runTrace(root);
+</script>
+
+<style>
+  .trace {
+    margin: 0;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem 1.1rem;
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    justify-content: space-between;
+    color: var(--muted);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.35rem;
+    border-bottom: 1px dashed var(--line);
+  }
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 10rem) minmax(3rem, 1fr) 4.2rem 6.6rem;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.62rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  }
+  .row:last-child {
+    border-bottom: 0;
+  }
+  .method {
+    color: var(--muted);
+  }
+  .target {
+    color: var(--paper);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .target small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+  .track {
+    position: relative;
+    height: 6px;
+    background: var(--ink-3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: var(--paper-dim);
+    border-radius: 3px;
+  }
+  .ms {
+    text-align: right;
+    color: var(--paper-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .state {
+    white-space: nowrap;
+    text-align: right;
+    color: var(--muted);
+  }
+  .state::before {
+    content: '';
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    background: currentColor;
+    vertical-align: 0.08em;
+  }
+
+  [data-state='pending'] .fill {
+    background: var(--sodium);
+  }
+  [data-state='pending'] .state {
+    color: var(--sodium);
+  }
+  [data-state='pending'] .state::before {
+    animation: pulse 1.1s ease-in-out infinite;
+  }
+  [data-state='ok'] .fill {
+    background: var(--ok);
+  }
+  [data-state='ok'] .state {
+    color: var(--ok);
+  }
+  [data-state='fail'] .fill {
+    background: var(--fault);
+  }
+  [data-state='fail'] .state {
+    color: var(--fault);
+  }
+
+  .note {
+    margin-top: 0.85rem;
+    color: var(--paper-dim);
+    line-height: 1.55;
+    font-size: 0.78rem;
+  }
+
+  @keyframes pulse {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        'target ms state'
+        'track track track';
+      row-gap: 0.45rem;
+    }
+    .method {
+      display: none;
+    }
+    .target {
+      grid-area: target;
+    }
+    .track {
+      grid-area: track;
+    }
+    .ms {
+      grid-area: ms;
+    }
+    .state {
+      grid-area: state;
+    }
+  }
+</style>

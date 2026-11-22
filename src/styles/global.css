@@ -1,0 +1,172 @@
+/*
+ * Design tokens and the few rules every page shares.
+ * Component styles live inside each component and are scoped to it,
+ * so changing one section cannot restyle another.
+ */
+
+:root {
+  /* Colour: night-shift server room, lit by sodium lamps. */
+  --ink: #0e1216;        /* page */
+  --ink-2: #141a20;      /* raised surfaces */
+  --ink-3: #1b222a;      /* hover, wells */
+  --line: #26303a;       /* hairlines */
+  --paper: #e9e4d9;      /* main text */
+  --paper-dim: #b9b4a9;  /* secondary text */
+  --muted: #7f8a94;      /* labels, metadata */
+  --sodium: #f0a63a;     /* the one accent */
+  --sodium-dim: #f0a63a26;
+  --ok: #79c99a;         /* healthy */
+  --fault: #e0715e;      /* failure */
+
+  /* Type: a person's voice (serif) and the system's voice (mono). */
+  --serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
+  --step-0: clamp(1.06rem, 1rem + 0.25vw, 1.2rem);
+  --step-1: clamp(1.3rem, 1.18rem + 0.5vw, 1.6rem);
+  --step-2: clamp(1.7rem, 1.45rem + 1.1vw, 2.4rem);
+  --step-3: clamp(2.4rem, 1.8rem + 2.8vw, 4.4rem);
+
+  --measure: 64ch;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --max: 1180px;
+  --radius: 6px;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--sodium);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  color: var(--sodium);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sodium);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--sodium);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* The system's voice: small mono labels. */
+.mono {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.01em;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 20;
+  background: var(--sodium);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+}
+.skip:focus {
+  top: 1rem;
+}
+
+/* Large monitors: scale the whole type system and widen the page, so a
+   1440p or 4K screen does not show a small island in the middle. */
+@media (min-width: 1800px) {
+  html {
+    font-size: 112.5%;
+  }
+  :root {
+    --max: 1380px;
+  }
+}
+@media (min-width: 2300px) {
+  html {
+    font-size: 125%;
+  }
+  :root {
+    --max: 1560px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
