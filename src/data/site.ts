@@ -55,7 +55,9 @@ export const probes: Probe[] = [
     label: 'visionaryx api',
     host: '/health · free tier',
     url: 'https://visionaryx-backend.onrender.com/health',
-    mode: 'cors',
+    // VisionaryX only allows its own site to read responses (CORS), so this
+    // check can see that the server answered, not what it said. It still wakes it.
+    mode: 'opaque',
     timeoutMs: 90_000,
     note: 'VisionaryX sleeps on a free server. This page sent it a wake-up request when you arrived, so it should be awake by the time you open it.',
   },
