@@ -5,7 +5,9 @@
 
 export const person = {
   name: 'Siddhant Thakur',
-  role: 'Backend Python developer',
+  role: 'Backend engineer',
+  /** Main language, shown next to the role in the hero. */
+  focus: 'Python',
   place: 'Kolkata, India',
   timezone: 'Asia/Kolkata',
   /** Split so the address never appears whole in the HTML that scrapers read. */
@@ -17,9 +19,9 @@ export const person = {
 } as const;
 
 export const meta = {
-  title: 'Siddhant Thakur — Backend Python developer',
+  title: 'Siddhant Thakur — Backend engineer · Python, FastAPI, PostgreSQL, LLM & RAG',
   description:
-    'Backend Python developer in Kolkata. I build and run Reflect, a live résumé-to-job analysis platform, and write up what breaks and how I fixed it.',
+    'Backend engineer in Kolkata, working in Python, FastAPI and PostgreSQL. I build and run Reflect, a live résumé-to-job analysis platform, and write up what breaks and how I fixed it.',
 } as const;
 
 export type Probe = {

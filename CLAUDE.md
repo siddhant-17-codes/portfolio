@@ -5,7 +5,7 @@ Cloudflare Pages from the `main` branch. Read this before changing anything.
 
 ## What the site is for
 
-It shows that Siddhant is a backend Python developer by showing how he works:
+It shows that Siddhant is a backend engineer (Python, FastAPI, PostgreSQL, LLM and RAG systems) by showing how he works:
 live systems, decisions and postmortems. It is not a list of skills. Keep it that
 way: a change that adds generic portfolio furniture (skill bars, logo walls,
 "passionate developer" copy, testimonials) is a regression.

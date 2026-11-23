@@ -1,6 +1,6 @@
 # siddhant-portfolio
 
-Personal site of Siddhant Thakur, backend Python developer, Kolkata.
+Personal site of Siddhant Thakur, backend engineer (Python), Kolkata.
 
 Static site built with [Astro](https://astro.build) and TypeScript. No UI
 framework runtime is shipped; the only JavaScript is a few small scripts:
